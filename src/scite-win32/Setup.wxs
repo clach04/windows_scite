@@ -1,0 +1,301 @@
+﻿<!--
+	Author: Troy Simpson (ebswift@gmail.com) https://www.ebswift.com
+
+	See BuildConfig.wxs for build info.
+-->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<?include BuildConfig.wxs ?>
+	<!-- These directives remain the same between builds -->
+	<?define ProductShortName="SciTE" ?>
+	<?define RTMProductVersion="1.0.0" ?>
+	<?define UpgradeCode="{51F1A204-658B-4F22-8F40-867C91878B8A}" ?>
+	<?define PackageCode="*" ?>
+	
+	<Product Id="$(var.ProductCode)"
+		Name="!(loc.ProductName)"
+		Language="1033"
+		Version="$(var.ProductVersion)"
+		UpgradeCode="$(var.UpgradeCode)"
+		Manufacturer="ebswift.com">
+		<Package Description="!(loc.PackageDescription) v$(var.ProductVersion)"
+		    Id="$(var.PackageCode)"
+			InstallerVersion="300"
+		    Platform="$(var.Platform)"
+			Compressed="yes"/>
+
+		<!-- this section allows the installer to upgrade - omitting it will cause new entries on add/remove -->
+		<Upgrade Id="$(var.UpgradeCode)">
+			<UpgradeVersion Minimum="$(var.ProductVersion)" IncludeMinimum="no" OnlyDetect="yes" Language="1033" Property="NEWPRODUCTFOUND" />
+			<UpgradeVersion Minimum="$(var.RTMProductVersion)" IncludeMinimum="yes" Maximum="$(var.ProductVersion)" IncludeMaximum="no" Language="1033" Property="UPGRADEFOUND" />
+ 		</Upgrade>
+
+		<!--
+			Source media for the installation. 
+ 			Specifies a single cab file to be embedded in the installer's .msi. 
+		-->
+		<Media Id="1" Cabinet="contents.cab" EmbedCab="yes" CompressionLevel="high"/>
+
+		<!-- Installation directory and files are defined in Files.wxs -->
+		<Directory Id="TARGETDIR" Name="SourceDir"/>
+		
+		<Feature Id="VCRedist" Title="Visual C++ 10.0 Runtime" AllowAdvertise="no" Display="hidden" Level="1">
+			<MergeRef Id="VCRedist"/>
+		</Feature>
+		
+		<Feature Id="Complete"
+		         Title="SciTE Text Editor"
+		         Description="Open Source Text Editor"
+		         Level="1" Absent="disallow">
+			<ComponentRef Id="AbaqusProperties"/>
+			<ComponentRef Id="AbbrevProperties"/>
+			<ComponentRef Id="AdaProperties"/>
+			<ComponentRef Id="AsciidocProperties"/>
+			<ComponentRef Id="AslProperties"/>
+			<ComponentRef Id="AsmProperties"/>
+			<ComponentRef Id="Asn1Properties"/>
+			<ComponentRef Id="Au3Properties"/>
+			<ComponentRef Id="AveProperties"/>
+			<ComponentRef Id="AvsProperties"/>
+			<ComponentRef Id="BaanProperties"/>
+			<ComponentRef Id="BlitzbasicProperties"/>
+			<ComponentRef Id="BullantProperties"/>
+			<ComponentRef Id="CamlProperties"/>
+			<ComponentRef Id="CilProperties"/>
+			<ComponentRef Id="CmakeProperties"/>
+			<ComponentRef Id="CoffeeScriptProperties"/>
+			<ComponentRef Id="CobolProperties"/>
+			<ComponentRef Id="CommandValuesHtml"/>
+			<ComponentRef Id="ConfProperties"/>
+			<ComponentRef Id="CppProperties"/>
+			<ComponentRef Id="crystalLicenseTxt" />
+			<ComponentRef Id="CsoundProperties"/>
+			<ComponentRef Id="CssProperties"/>
+			<ComponentRef Id="DataflexProperties"/>
+			<ComponentRef Id="DProperties"/>
+			<ComponentRef Id="DemoPng"/>
+			<ComponentRef Id="ECLProperties"/>
+			<ComponentRef Id="EiffelProperties"/>
+			<ComponentRef Id="ErlangProperties"/>
+			<ComponentRef Id="EscriptProperties"/>
+			<ComponentRef Id="FlagshipProperties"/>
+			<ComponentRef Id="ForthProperties"/>
+			<ComponentRef Id="FortranProperties"/>
+			<ComponentRef Id="FreebasicProperties"/>
+			<ComponentRef Id="FSharpProperties"/>
+			<ComponentRef Id="GapProperties"/>
+			<ComponentRef Id="HaskellProperties"/>
+			<ComponentRef Id="HexProperties"/>
+			<ComponentRef Id="HollywoodProperties"/>
+			<ComponentRef Id="HtmlProperties"/>
+			<ComponentRef Id="IDSciTEProgGroup"/>
+			<ComponentRef Id="InnoProperties"/>
+			<ComponentRef Id="JsonProperties"/>
+			<ComponentRef Id="KixProperties"/>
+			<ComponentRef Id="LatexProperties"/>
+			<ComponentRef Id="LexillaDLL"/>
+			<ComponentRef Id="LicenseRtf"/>
+			<ComponentRef Id="LicenseTxt"/>
+			<ComponentRef Id="LispProperties"/>
+			<ComponentRef Id="LotProperties"/>
+			<ComponentRef Id="LoutProperties"/>
+			<ComponentRef Id="LuaProperties"/>
+			<ComponentRef Id="LuaCOPYRIGHT"/>
+			<ComponentRef Id="MarkdownProperties"/>
+			<ComponentRef Id="MatlabProperties"/>
+			<ComponentRef Id="MaximaProperties"/>
+			<ComponentRef Id="MetapostProperties"/>
+			<ComponentRef Id="MmixalProperties"/>
+			<ComponentRef Id="Modula3Properties"/>
+			<ComponentRef Id="NimProperties"/>
+			<!--ComponentRef Id="NimrodProperties"/ -->
+			<ComponentRef Id="NncrontabProperties"/>
+			<ComponentRef Id="NsisProperties"/>
+			<ComponentRef Id="OpalProperties"/>
+			<ComponentRef Id="oscriptProperties"/>
+			<ComponentRef Id="OthersProperties"/>
+			<ComponentRef Id="PaneAPI"/>
+			<ComponentRef Id="PascalProperties"/>
+			<ComponentRef Id="PerlProperties"/>
+			<ComponentRef Id="PovProperties"/>
+			<ComponentRef Id="PowerProProperties"/>
+			<ComponentRef Id="PowershellProperties"/>
+			<ComponentRef Id="PrintHiPng"/>
+			<ComponentRef Id="PropertiesLocation"/>
+			<ComponentRef Id="PsProperties"/>
+			<ComponentRef Id="PurebasicProperties"/>
+			<ComponentRef Id="PythonProperties"/>
+			<ComponentRef Id="RProperties"/>
+			<ComponentRef Id="RakuProperties"/>
+			<ComponentRef Id="RebolProperties"/>
+			<ComponentRef Id="RegistryProperties"/>
+			<ComponentRef Id="RubyProperties"/>
+			<ComponentRef Id="RustProperties"/>
+			<ComponentRef Id="SasProperties"/>
+			<ComponentRef Id="SciBreak2Jpg"/>
+			<ComponentRef Id="ScintillaDll"/>
+			<ComponentRef Id="Scite1"/>
+			<ComponentRef Id="SciTEExe"/>
+			<ComponentRef Id="SciTEHtml"/>
+			<ComponentRef Id="SciTEProperties"/>
+			<ComponentRef Id="SciTEDirectorHtml"/>
+			<ComponentRef Id="SciTEDocHtml"/>
+			<ComponentRef Id="SciTEDownloadHtml"/>
+			<ComponentRef Id="SciTEExtensionHtml"/>
+			<ComponentRef Id="SciTEExternalLexerHtml"/>
+			<ComponentRef Id="SciTEExtrasHtml"/>
+			<ComponentRef Id="SciTEFAQHtml"/>
+			<ComponentRef Id="SciTEGlobalProperties"/>
+			<ComponentRef Id="SciTEHistoryHtml"/>
+			<ComponentRef Id="SciTEIcoPng"/>
+			<ComponentRef Id="SciTEIcoPng2"/>
+			<ComponentRef Id="SciTEImageHtml"/>
+			<ComponentRef Id="SciTEIndicatorsPng"/>
+			<ComponentRef Id="SciTELexerHtml"/>
+			<ComponentRef Id="SciTELogoPng"/>
+			<ComponentRef Id="SciTELogo2xPng"/>
+			<ComponentRef Id="SciTELogoPng2"/>
+			<ComponentRef Id="SciTELogo2xPng2"/>
+			<ComponentRef Id="SciTELuaHtml"/>
+			<ComponentRef Id="SciTERegExHtml"/>
+			<ComponentRef Id="SciTEUserProperties"/>
+			<ComponentRef Id="SciTEWordJpg"/>
+			<ComponentRef Id="ScriptLexer"/>
+			<ComponentRef Id="ScriptolProperties"/>
+			<ComponentRef Id="SharedFolderPermissions"/>
+			<ComponentRef Id="shchangeexe"/>
+			<ComponentRef Id="SorcinsProperties"/>
+			<ComponentRef Id="SmalltalkProperties"/>
+			<ComponentRef Id="SpecmanProperties"/>
+			<ComponentRef Id="SpiceProperties"/>
+			<ComponentRef Id="SqlProperties"/>
+			<ComponentRef Id="TaclProperties"/>
+			<ComponentRef Id="TalProperties"/>
+			<ComponentRef Id="TclProperties"/>
+			<ComponentRef Id="TexProperties"/>
+			<ComponentRef Id="TidyExe"/>
+			<ComponentRef Id="TidyDll"/>
+			<ComponentRef Id="TidyLicense"/>
+			<ComponentRef Id="Txt2tagsProperties"/>
+			<ComponentRef Id="UserPropertiesLocation"/>
+			<ComponentRef Id="VbProperties"/>
+			<ComponentRef Id="VerilogProperties"/>
+			<ComponentRef Id="VhdlProperties"/>
+			<ComponentRef Id="YamlProperties"/>
+			<ComponentRef Id="VisualPrologProperties"/>
+		</Feature>
+
+		<Feature Id="ShellExt"
+		         Title="Shell Extension"
+		         Description="Adds a right-click shortcut to open files with SciTE"
+		         Level="1">
+			<Condition Level="0">Not Privileged</Condition>  <!-- disable if not administrator -->
+			<ComponentRef Id="WscitecmDll"/>
+			<ComponentRef Id="WscitecmDll64"/>
+			<ComponentRef Id="Wscitecm124_srcLicenseTxt"/>
+		</Feature>
+
+		<!--
+		<Feature Id="ShellExt32"
+		         Title="32bit Explorer Shell Extension"
+		         Description="Adds a right-click context menu in Windows Explorer (also adds menu functionality to 32bit programs on 64bit systems)"
+		         Level="1">
+			<Condition Level="0">Not Privileged</Condition>  disable if not administrator
+			<ComponentRef Id="WscitecmDll"/>
+			<ComponentRef Id="WscitecmDll64"/>
+			<ComponentRef Id="Wscitecm124_srcLicenseTxt"/>
+		</Feature>
+
+		<Feature Id="ShellExt64"
+		         Title="64bit Explorer Shell Extension"
+		         Description="Adds a right-click context menu in Windows Explorer"
+		         Level="1">
+			<Condition Level="0">Not Privileged</Condition>  disable if not administrator
+			<ComponentRef Id="WscitecmDll"/>
+			<ComponentRef Id="WscitecmDll64"/>
+			<ComponentRef Id="Wscitecm124_srcLicenseTxt"/>
+		</Feature>
+		-->
+		
+		<Feature Id="DesktopShortcut"
+				 Title="Desktop Shortcut"
+				 Level="1">
+			<ComponentRef Id="ApplicationShortcutDesktop"/>
+		</Feature>
+		
+		<Property Id="ApplicationFolderName" Value="$(var.ProductShortName)" />
+		<Property Id="WixAppFolder" Value="WixPerMachineFolder" />
+
+		<!-- localise Users permission group -->
+		<PropertyRef Id="WIX_ACCOUNT_LOCALSYSTEM" />
+		<PropertyRef Id="WIX_ACCOUNT_USERS" />
+		
+		<!-- allow selection of all users or current users -->
+		<WixVariable Id="WixUISupportPerMachine" Value="1" Overridable="yes" />
+		<WixVariable Id="WixUISupportPerUser"    Value="1" Overridable="yes" />
+
+		<!-- a fix is required for a current user install - ALLUSERS reverts to 1 forcing registry entries to go into HKLM, not HKCU
+		     http://n2.nabble.com/Installation-to-limited-user-account-failing-on-WixUI-Advanced-td3884171.html
+		-->
+		<UIRef Id="WixUI_SCiTEAdvanced"/>
+
+		<!-- set dialog custom bitmaps -->
+		<WixVariable Id="WixUIDialogBmp" Value="Bitmaps\dlgbmp.bmp"/>
+		<WixVariable Id="WixUIBannerBmp" Value="Bitmaps\wiz-55x55x24.bmp"/>	
+
+		<!-- register/unregister the shell menu item -->
+		<!--
+			TODO: use heat to generate a snippet for registration rather than using execommand.
+			
+			The catch is that heat cannot deal with the 64bit file yet, so we need to wait until
+			that functionality is available.
+			
+			At that point, the effects of UAC need to be tested which is currently being dealt
+			with by deferred and impersonate.
+		-->
+		
+		<!-- 32bit
+		<CustomAction Id="Registerwsc" Directory="APPLICATIONFOLDER" ExeCommand='regsvr32.exe /s "[APPLICATIONFOLDER]wscitecm.dll"' Execute="deferred" Impersonate="no" Return="check" /> 
+        <CustomAction Id="Unregisterwsc" Directory="APPLICATIONFOLDER" ExeCommand='regsvr32.exe /s /u "[APPLICATIONFOLDER]wscitecm.dll"' Execute="deferred" Impersonate="no" Return="check" />
+
+		64bit
+		<CustomAction Id="Registerwsc64" Directory="APPLICATIONFOLDER" ExeCommand='regsvr32.exe /s "[APPLICATIONFOLDER]wscitecm64.dll"' Execute="deferred" Impersonate="no" Return="check" /> 
+        <CustomAction Id="Unregisterwsc64" Directory="APPLICATIONFOLDER" ExeCommand='regsvr32.exe /s /u "[APPLICATIONFOLDER]wscitecm64.dll"' Execute="deferred" Impersonate="no" Return="check" />
+ 		-->
+
+		<!-- Prevent downgrading -->
+		<CustomAction Id="PreventDowngrading" Error="You cannot downgrade SciTE, please uninstall first." />
+
+		<CustomActionRef Id="WixBroadcastEnvironmentChange" />
+
+		<CustomAction Id="ShellChange" Directory="APPLICATIONFOLDER" ExeCommand="[SystemFolder]cmd.exe /C shchange.exe" />
+
+		<InstallExecuteSequence>
+			<!-- other actions -->
+			<Custom Action="PreventDowngrading" After="FindRelatedProducts">NEWPRODUCTFOUND</Custom>
+
+			<RemoveExistingProducts After="InstallFinalize" />
+
+			<Custom Action="ShellChange" After="InstallFinalize">NOT Installed</Custom>
+			
+			<!-- the registration Before's and After's have been inverted to work with deferred -->
+			<!-- 32bit
+			register the 32bit wscitecm in both the 32bit and 64bit installation
+			<Custom Action="Registerwsc" Before="InstallFinalize">NOT Installed AND &amp;ShellExt32=3</Custom>
+			<Custom Action="Unregisterwsc" After="InstallInitialize">Installed AND &amp;ShellExt32=3</Custom>
+			
+			64bit
+			<Custom Action="Registerwsc64" Before="InstallFinalize">NOT Installed AND VersionNT64 AND &amp;ShellExt64=3</Custom> 
+			<Custom Action="Unregisterwsc64" After="InstallInitialize">Installed AND VersionNT64 AND &amp;ShellExt64=3</Custom>
+			--> 
+		</InstallExecuteSequence>
+
+		<InstallUISequence>
+			<Custom Action="PreventDowngrading" After="FindRelatedProducts">NEWPRODUCTFOUND</Custom>
+		</InstallUISequence>
+
+		<!-- add/remove programs icon -->
+		<Icon Id="sciteball.ico" SourceFile="..\..\Bitmaps\SciBall.ico"/>
+		<Property Id="ARPPRODUCTICON" Value="sciteball.ico" />
+	</Product>
+</Wix>

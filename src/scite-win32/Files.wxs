@@ -1,0 +1,667 @@
+﻿<!--
+	Author: Troy Simpson (ebswift@gmail.com) https://www.ebswift.com
+
+	See BuildConfig.wxs for build info.
+-->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+	xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+	<?include BuildConfig.wxs ?>
+	<?if $(var.Platform)=x64 ?>
+		<?warning 64bit build?>
+		<?define InstallTarget="ProgramFiles64Folder" ?>
+		<?define winx64="yes" ?>
+		<?define vcmm="..\..\not_for_redistribution\Microsoft_VC100_CRT_x64.msm"?>
+	<?else ?>
+		<?warning x86 build?>
+		<?define InstallTarget="ProgramFilesFolder" ?>
+		<?define winx64="no" ?>
+		<?define vcmm="..\..\not_for_redistribution\Microsoft_VC100_CRT_x86.msm"?>
+	<?endif ?>	
+	
+	<!-- because we include 32bit components, SciTE will ALWAYS be installed into Program Files (x86) on an x64 machine, so we just use ProgramFilesFolder -->
+	<?define appfolder="APPLICATIONFOLDER" ?>
+	<?define x86InstallTarget="ProgramFilesFolder" ?>
+
+	<Fragment>
+		<!-- resolve non-advertised shortcuts for current user or all users -->
+		<Property Id="DISABLEADVTSHORTCUTS" Value="1" />
+	
+		<DirectoryRef Id="TARGETDIR">
+			<!-- ProgramFiles64Folder ProgramFilesFolder -->
+			<Directory Id="$(var.InstallTarget)" Name="PFiles">
+				<Directory Id="APPLICATIONFOLDER" Name="Scintilla Text Editor">
+					<?if $(var.Platform) = x64 ?>
+						<Component Guid="4E4DC5DB-1DD6-4053-BB43-E38894DCAE7E" Id="TidyExe" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+							<File Source="..\..\htmltidy\win64\tidy.exe" Name="tidy.exe" Id="tidy.exe" KeyPath="yes" />
+						</Component>
+						<Component Guid="D4822D4F-B25C-4024-B7D9-241C873B8412" Id="TidyDll" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+							<File Source="..\..\htmltidy\win64\tidy.dll" Name="tidy.dll" Id="tidy.dll" KeyPath="yes" />
+						</Component>
+					<?else ?>
+						<Component Guid="5C590E5C-34AF-4B95-B009-3EBAA2DF2DA2" Id="TidyExe" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+							<File Source="..\..\htmltidy\win32\tidy.exe" Name="tidy.exe" Id="tidy.exe" KeyPath="yes" />
+						</Component>
+						<Component Guid="FB8B74B9-70CC-4BB9-A848-98D827B62E1E" Id="TidyDll" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+							<File Source="..\..\htmltidy\win32\tidy.dll" Name="tidy.dll" Id="tidy.dll" KeyPath="yes" />
+						</Component>
+					<?endif ?>	
+					
+					<!-- Merge modules are installed with VS2010 (you can just install merge modules from a custom install) -->
+				    <!-- This is the way Microsoft requires us to re-distribute VC++ runtimes -->
+					<Merge Id="VCRedist" SourceFile="$(var.vcmm)" DiskId="1" Language="0" />
+
+					<!-- Merge Id="wscitecm64" SourceFile="$(var.wscitecm64)" DiskId="1" Language="0" / -->
+					<!-- Merge Id="wscitecm" SourceFile="$(var.wscitecm)" DiskId="1" Language="0" / -->
+					
+					<!-- change Win64 to yes or Win64 no depending on platform to be building for, for each component -->
+					<Component Guid="351675FA-7871-4143-AB9C-DDF43F173154" Id="CommandValuesHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\CommandValues.html" Name="CommandValues.html" Id="CommandValues.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="CE5F6945-936F-4F21-B3F4-3476C1441BA4" Id="DemoPng" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\demo.png" Name="demo.png" Id="demo.png" KeyPath="yes" />
+					</Component>
+					<!-- Component Guid="C14FBE5B-CC86-4153-84A9-100FE8B50E85" Id="EnvSet" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\envset\envset.exe" Name="envset.exe" Id="envset.exe" KeyPath="yes" />
+					</Component -->
+					<Component Guid="0C9D3F31-36A2-4C76-9D14-47527AE283A3" Id="LexillaDLL" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\Lexilla.dll" Name="Lexilla.dll" Id="Lexilla.dll" KeyPath="yes" />
+					</Component>
+					<Component Guid="0FDCAD78-9FB7-4711-9ECF-3146E6D7211C" Id="LuaCOPYRIGHT" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\luaCOPYRIGHT" Name="luaCOPYRIGHT" Id="luaCOPYRIGHT" KeyPath="yes" />
+					</Component>
+					<Component Guid="80B55934-EEC5-4BD5-906B-7FC7A3963207" Id="PrintHiPng" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\PrintHi.png" Name="PrintHi.png" Id="PrintHi.png" KeyPath="yes" />
+					</Component>
+					<Component Guid="0B3A8332-F466-4210-BD0B-5D70C3F94523" Id="SciBreak2Jpg" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciBreak2.jpg" Name="SciBreak2.jpg" Id="SciBreak2.jpg" KeyPath="yes" />
+					</Component>
+					<Component Guid="1464581E-09CF-4D73-A940-3388B658EC21" Id="ScintillaDll" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\Scintilla.dll" Name="Scintilla.dll" Id="Scintilla.dll" KeyPath="yes" />
+					</Component>
+					<Component Guid="CED43547-CAC2-400A-AD03-08266C8CCE7B" Id="Scite1" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\scite.1" Name="scite.1" Id="scite.1" KeyPath="yes" />
+					</Component>
+					<?if $(var.Platform) = x64 ?>
+						<Component Guid="CF2109E2-6362-4A46-8D73-105C5D9B4546" Id="shchangeexe" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+							<File Source="..\shchange\shchange\x64\Release\shchange.exe" Name="shchange.exe" Id="shchange.exe" KeyPath="yes" />
+						</Component>
+					<?else ?>
+						<Component Guid="A9985E11-008F-4CF2-AFA0-78EA71F8F0A2" Id="shchangeexe" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+							<File Source="..\shchange\shchange\Release\shchange.exe" Name="shchange.exe" Id="shchange.exe" KeyPath="yes" />
+						</Component>
+					<?endif ?>	
+					<Component Guid="5782B17D-1787-496D-8664-3DC3655EE164" Id="SciTEExe" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTE.exe" Name="SciTE.exe" Id="SciTE.exe" KeyPath="yes">
+							<Shortcut Name="SciTE" Id="sciteexe" Description="SciTE" Directory="SciTEMenuFolder" Advertise="yes" Icon="SciBall.ico">
+								<Icon Id="SciBall.ico" SourceFile="..\..\Bitmaps\SciBall.ico" />
+							</Shortcut>
+						</File>
+
+						<!-- Make SciTE visible in 'Open With...' -->
+
+						<!-- ProgID (always required) -->
+						<RegistryValue Root="HKMU"
+							Key="SOFTWARE\Classes\SciTEExe.1"
+							Name="FriendlyTypeName"
+							Value="SciTEExe ProgID"
+							Type="string" />
+
+						<!-- this forces txt files to be opened with scite, not good, should be user choice
+						<ProgId Id="SciTEExe.MyProgId"
+							Description="SciTEExe MyProgId"
+							Advertise="yes">
+							<Extension Id="txt">
+								<Verb Id="open"
+									Command="Open"
+									Argument="&quot;%1&quot;"/>
+								</Extension>
+						</ProgId>
+						<RegistryValue Root="HKMU"
+							Key="SOFTWARE\Classes\.txt\OpenWithProgids"
+							Name="SciTEExe.MyProgId"
+							Value=""
+							Type="string" />
+						-->
+						
+						  <RegistryValue Root="HKMU"
+						                 Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\SciTE.exe"
+						                 Value="[!SciTE.exe]"
+						                 Type="string" />
+						  <RegistryValue Root="HKMU"
+						                 Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\SciTE.exe"
+						                 Name="Path"
+						                 Value="[INSTALLFOLDER]"
+						                 Type="string" />
+						  <RegistryValue Root="HKMU"
+						                 Key="SOFTWARE\Classes\Applications\SciTE.exe\SupportedTypes"
+						                 Name=".*"
+						                 Value=""
+						                 Type="string" />
+						  <RegistryValue Root="HKMU"
+						                 Key="SOFTWARE\Classes\Applications\SciTE.exe\shell\open"
+						                 Name="SciTE"
+						                 Value="SciTE"
+						                 Type="string" />
+					</Component>
+					<Component Guid="BB605BB0-235B-4424-A4EF-31C9A82AD1FC" Id="SciTEHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTE.html" Name="SciTE.html" Id="SciTE.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="2DED0E8F-C085-4413-8065-C8579569E6BD" Id="SciTEDirectorHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEDirector.html" Name="SciTEDirector.html" Id="SciTEDirector.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="604B8086-E516-4BC2-85B5-4FBDC0500F51" Id="SciTEDownloadHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEDownload.html" Name="SciTEDownload.html" Id="SciTEDownload.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="DC9A9AFF-17E8-40E1-B61D-BD05A6B3F6D9" Id="SciTEExtensionHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEExtension.html" Name="SciTEExtension.html" Id="SciTEExtension.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="7BAC456D-BB9A-4C19-A420-D86F0EF5C5D3" Id="SciTEExternalLexerHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEExternalLexer.html" Name="SciTEExternalLexer.html" Id="SciTEExternalLexer.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="281A795B-31D0-41D1-BBE1-FB55341CC8EA" Id="SciTEExtrasHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEExtras.html" Name="SciTEExtras.html" Id="SciTEExtras.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="E065DEB6-4A39-4C9A-B1F1-4477F27F0DD3" Id="SciTEFAQHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEFAQ.html" Name="SciTEFAQ.html" Id="SciTEFAQ.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="1E21CD2B-B4E4-40D9-A91A-C501E8820E14" Id="SciTEIcoPng" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEIco.png" Name="SciTEIco.png" Id="SciTEIco.png" KeyPath="yes" />
+					</Component>
+					<Component Guid="91F3CD90-E042-4831-B266-435607364831" Id="SciTEImageHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEImage.html" Name="SciTEImage.html" Id="SciTEImage.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="F939881C-3D3E-447A-B4B6-CD4749B0EB31" Id="SciTEIndicatorsPng" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEIndicators.png" Name="SciTEIndicators.png" Id="SciTEIndicators.png" KeyPath="yes" />
+					</Component>
+					<Component Guid="1161D2B4-2134-40E3-B73D-FF1BC5AA2AFB" Id="SciTELexerHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTELexer.html" Name="SciTELexer.html" Id="SciTELexer.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="4CB64FF4-1EC3-4957-A83A-C8C8EAC37AFD" Id="SciTELogoPng" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTELogo.png" Name="SciTELogo.png" Id="SciTELogo.png" KeyPath="yes" />
+					</Component>
+					<Component Guid="E14DC0A1-1D94-4683-AE2A-B55E108182E0" Id="SciTELogo2xPng" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTELogo2x.png" Name="SciTELogo2x.png" Id="SciTELogo2x.png" KeyPath="yes" />
+					</Component>
+					<Component Guid="D6DD3A74-8AEE-4C8E-898F-49B4334796AB" Id="SciTELuaHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTELua.html" Name="SciTELua.html" Id="SciTELua.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="EABED210-F070-41A3-BEA1-ABEADE55EA0A" Id="SciTERegExHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTERegEx.html" Name="SciTERegEx.html" Id="SciTERegEx.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="03F8F170-D55D-4BC2-BE8A-CCC86561D0C8" Id="SciTEWordJpg" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEWord.jpg" Name="SciTEWord.jpg" Id="SciTEWord.jpg" KeyPath="yes" />
+					</Component>
+					<Component Guid="EA0B7E3F-6D5E-4A7E-BCB8-C0135C400768" Id="ScriptLexer" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\ScriptLexer.html" Name="ScriptLexer.html" Id="ScriptLexer.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="242B7E57-A894-4D2D-98E6-2527EEBF63F8" Id="TidyLicense" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\htmltidy\Tidy LICENSE.txt" Name="Tidy LICENSE.txt" Id="TidyLICENSE.txt" KeyPath="yes" />
+					</Component>
+					<!-- install wscitecm.dll in both 32bit and 64bit versions, this will allow the context menu to work in 32bit programs that use system to show files -->
+					<!-- We derive this fragment with the following command:
+					heat file wscitecm.dll -o wscitecm.wxs
+					
+		            <Component Id="WscitecmDll" Guid="33CCF64B-15A5-4E50-A71E-3CFE705841F4" Shared="no" Permanent="no" DiskId="1" Win64="no">
+		                <File Id="wscitecm.dll" KeyPath="yes" Source="..\..\wscitecm_src\Release\wscitecm.dll">
+		                    <Class Id="{C4ACBD3E-6114-4618-904C-B206ABA9DEB0}" Context="InprocServer32" Description="SciTE Shell Context Menu" ThreadingModel="apartment" />
+		                </File>
+		                <RegistryValue Root="HKCR" Key="*\shellex\ContextMenuHandlers\SciTE" Value="{C4ACBD3E-6114-4618-904C-B206ABA9DEB0}" Type="string" Action="write" />
+		            </Component>
+					-->
+					
+					<!-- on a 32bit system, this dll is the only one that is registered as the shell extension -->
+					<Component Guid="7BFA7311-A2F6-49CD-A1B7-480E88565F16" Id="WscitecmDll" Shared="no" Permanent="no" DiskId="1" Win64="no">
+						<File Source="..\..\wscitecm\wscitecm.dll" Name="wscitecm.dll" Id="wscitecm.dll" KeyPath="yes">
+	                    	<Class Id="{C4ACBD3E-6114-4618-904C-B206ABA9DEB0}" Context="InprocServer32" Description="SciTE" ThreadingModel="apartment" />
+						</File>
+						<RegistryValue Root="HKCR" Key="*\shellex\ContextMenuHandlers\SciTE" Value="{C4ACBD3E-6114-4618-904C-B206ABA9DEB0}" Type="string" Action="write" />
+					</Component>
+					<!-- 
+					On a 64bit system, both dll's are registered, however the 32bit version is registered for the 32bit shell, so when running a 32bit
+					program, when you open a 32bit shell (like file-open), the 32bit shell extension is used.
+					This behaviour can be observed in sharpdevelop's File-Open dialog
+					 -->
+					<Component Guid="52D13F81-4BFE-4202-9C8E-5F05FE6EDEC6" Id="WscitecmDll64" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscitecm\wscitecm64.dll" Name="wscitecm64.dll" Id="wscitecm64.dll" KeyPath="yes">
+		                    <Class Id="{C4ACBD3E-6114-4618-904C-B206ABA9DEB0}" Context="InprocServer32" Description="SciTE" ThreadingModel="apartment" />
+						</File>
+						<RegistryValue Root="HKCR" Key="*\shellex\ContextMenuHandlers\SciTE" Value="{C4ACBD3E-6114-4618-904C-B206ABA9DEB0}" Type="string" Action="write" />
+						<Condition>VersionNT64</Condition>
+					</Component>
+					
+					<Component Guid="264840C4-9D48-4D71-8E8B-5B39D36532FB" Id="LicenseTxt" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\License.txt" Name="License.txt" Id="License.txt" KeyPath="yes">
+							<Shortcut Name="SciTE License" Id="sctlicsct" Description="SciTE License" Directory="SciTEMenuFolder" Advertise="yes" Icon="txt1.ico">
+								<Icon Id="txt0.ico" SourceFile="..\..\Bitmaps\txt.ico" />
+							</Shortcut>
+						</File>
+					</Component>
+					<Component Guid="403BD34D-EE75-42B9-BEF5-614AD57A4039" Id="Wscitecm124_srcLicenseTxt" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscitecm\license.txt" Name="wsclicense.txt" Id="wsclicense.txt" KeyPath="yes">
+							<Shortcut Name="Context Menu Extension for SciTE License" Id="wsclicsct" Description="Context Menu Extension for SciTE License" Directory="SciTEMenuFolder" Advertise="yes" Icon="txt1.ico">
+								<Icon Id="txt1.ico" SourceFile="..\..\Bitmaps\txt.ico" />
+							</Shortcut>
+						</File>
+					</Component>
+					<Component Guid="1EB5F5DA-5F7F-4C84-A986-D3383D37B91A" Id="LicenseRtf" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="license.rtf" Name="license.rtf" Id="license.rtf" KeyPath="yes">
+							<Shortcut Advertise="yes" Description="SciTE License" Directory="SciTEMenuFolder" Id="sclicrtfsct" Name="Scintilla Text Editor License" Icon="txt2.ico">
+								<Icon Id="txt2.ico" SourceFile="..\..\Bitmaps\txt.ico" />
+							</Shortcut>
+						</File>
+					</Component>
+					<Component Guid="9BE0F112-DEB0-44C3-AC10-DF302AF51C10" Id="crystalLicenseTxt" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\Bitmaps\crystal-license.txt" Name="crystal-license.txt" Id="crystallicense.txt" KeyPath="yes">
+							<Shortcut Name="Crystal Icons License" Id="cryslicsct" Description="Crystal Icons License" Directory="SciTEMenuFolder" Advertise="yes" Icon="txt3.ico">
+								<Icon Id="txt3.ico" SourceFile="..\..\Bitmaps\txt.ico" />
+							</Shortcut>
+						</File>
+					</Component>
+				</Directory>
+			</Directory>
+			<!--Directory Id="$(var.x86InstallTarget)" Name="ProgramFilesx86Folder">
+				<Directory Id="$(var.appfolder)" Name="Scintilla Text Editor">
+					<Component Guid="7BFA7311-A2F6-49CD-A1B7-480E88565F16" Id="WscitecmDll" Shared="no" Permanent="no" DiskId="1">
+						<File Source="..\..\wscitecm\wscitecm.dll" Name="wscitecm.dll" Id="wscitecm.dll" KeyPath="yes" />
+					</Component>
+				</Directory>
+			</Directory-->
+			<Directory Id="AppDataFolder" Name="UserFolder">
+				<Directory Id="SciTEAppDataFolder" Name="SciTE">
+					<Component Id="UserPropertiesLocation"
+					         Guid="{25AB4AD6-7E4B-471B-9039-16950E7C5452}">
+						<CreateFolder />
+						<Environment Id="UserDataFolder"
+						             Action="set"
+						             Part="all"
+						             Name="SciTE_USERHOME"
+						             Permanent="no"
+						             System="yes"
+						             Value="[AppDataFolder]SciTE" />
+						<RegistryKey Id="UserEnv" Root="HKMU" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\SciTE.exe" Action="createAndRemoveOnUninstall">
+							<RegistryValue Id="UserEnvNoPath" Type="string" Value="[AppDataFolder]\SciTE\SciTEUser.properties" KeyPath="no" />
+							<RegistryValue Id="UserEnvPath" Name="Path" Type="string" Value="[AppDataFolder]\SciTE\SciTEUser.properties" KeyPath="no" />
+						</RegistryKey>
+					</Component>
+    				<Component Guid="8A6D74EB-6AB3-4C13-B337-D69F1442B62A" Id="SciTEUserProperties" Shared="no" Permanent="no" DiskId="1">
+						<File Source="SciTEUser.properties" Name="SciTEUser.properties" Id="SciTEUser.properties" KeyPath="no" />
+
+						<RegistryKey Id="UserProps" Root="HKMU" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\SciTE.exe" Action="createAndRemoveOnUninstall">
+							<RegistryValue Id="UserPropsNoPath" Type="string" Value="[AppDataFolder]\SciTE\SciTEUser.properties" KeyPath="no" />
+							<RegistryValue Id="UserPropsPath" Name="Path" Type="string" Value="[AppDataFolder]\SciTE\SciTEUser.properties" KeyPath="no" />
+						</RegistryKey>
+						<RemoveFile Id="SciTEUserProperties" Name="*.*" On="uninstall" Directory="SciTEAppDataFolder"/>
+						<RemoveFolder Id="SciTEAppDataFolder" On="uninstall" />
+					</Component>
+				</Directory>
+			</Directory>
+			<Directory Id="CommonAppDataFolder" Name="ProgramDataFolder">
+				<Directory Id="SciTEFolder" Name="SciTE">
+					<Component Id="SharedFolderPermissions" Guid="766602A9-066E-4A37-BFCB-4B33446D304E"> 
+						<CreateFolder Directory="SciTEFolder">
+							<!-- removed following two lines 3 Jan 2024 due to loss of inheritance -->							
+							<!-- Permission GenericAll="yes" User="[WIX_ACCOUNT_LOCALSYSTEM]" / -->
+							<!-- Permission GenericWrite="yes" GenericExecute="yes" Read="yes" ReadExtendedAttributes="yes" Traverse="yes" ReadAttributes="yes" ReadPermission="yes" Synchronize="yes" User="[WIX_ACCOUNT_USERS]" / -->
+
+							<!-- inherit programdata permissions (don't overwrite) and add all permissions to users so they can modify properties files -->
+							<util:PermissionEx User="[WIX_ACCOUNT_USERS]" GenericAll="yes" />
+
+							<!-- Users does not work localised in some languages -->
+							<!-- Permission User="Users" Domain="[MachineName]" GenericAll="yes" / -->
+							<!-- Permission User="Everyone" GenericAll="yes" / --> 
+						</CreateFolder> 
+					</Component> 
+					<!-- 
+						Set the properties folder to be the CommonAppDataFolder.
+						The trade-off is either you can have a separate user properties folder stored in their
+						profile, and common global properties files, or have all files including the user file
+						stored in the CommonAppDataFolder for everyone.
+
+						Some systems don't allow the program to change properties files when they are stored
+						under Program Files or Program Files(x86), so we take the trade-off and store all the
+						properties files under CommonAppDataFolder.
+					-->
+					<Component Id="PropertiesLocation"
+					         Guid="{8418535D-40E2-47EA-906D-C04FE5E8736A}">
+						<CreateFolder />
+						<Environment Id="DataFolder"
+						             Action="set"
+						             Part="all"
+						             Name="SciTE_HOME"
+						             Permanent="no"
+						             System="yes"
+						             Value="[CommonAppDataFolder]SciTE" />
+					</Component>
+    				<Component Guid="771F82CC-7E64-4E1C-BE6E-BB409AC6047B" Id="AbaqusProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\abaqus.properties" Name="abaqus.properties" Id="abaqus.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="1E60E7E8-7CF3-42EB-B57F-D5136F788606" Id="AbbrevProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\abbrev.properties" Name="abbrev.properties" Id="abbrev.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="83E948DA-453E-4CC6-8B15-AC85AB448C4D" Id="AdaProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\ada.properties" Name="ada.properties" Id="ada.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="55259EBC-373B-4EBB-9B70-9A9F41C60197" Id="AsciidocProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\asciidoc.properties" Name="asciidoc.properties" Id="asciidoc.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="47C9CCB1-0A66-489E-9B8A-6118C9CE2E2D" Id="AslProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\asl.properties" Name="asl.properties" Id="asl.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="6F12B4DE-B753-4C3A-B58F-ED69479BB049" Id="AsmProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\asm.properties" Name="asm.properties" Id="asm.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="D8489FE5-6F0C-41B6-895B-B108A6838F6B" Id="Asn1Properties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\asn1.properties" Name="asn1.properties" Id="asn1.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="9B14F3CE-8BE4-4A99-B942-3E5ABD6AB3F7" Id="Au3Properties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\au3.properties" Name="au3.properties" Id="au3.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="0748D90D-209A-4725-BC6E-8FCCE682DF3C" Id="AveProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\ave.properties" Name="ave.properties" Id="ave.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="32E03804-8F5A-4AC8-A309-17098C1EBB3D" Id="AvsProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\avs.properties" Name="avs.properties" Id="avs.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="3B23780F-5B0D-4060-96D9-D6328F3393CA" Id="BaanProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\baan.properties" Name="baan.properties" Id="baan.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="0E719730-7089-41D7-B46B-0DF5D06A6968" Id="BlitzbasicProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\blitzbasic.properties" Name="blitzbasic.properties" Id="blitzbasic.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="73568B88-36A8-46F1-B3F8-6C5B18C5AE4D" Id="BullantProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\bullant.properties" Name="bullant.properties" Id="bullant.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="9465EA24-5EB4-425C-AF86-D9CA31457960" Id="CamlProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\caml.properties" Name="caml.properties" Id="caml.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="38039D43-A3E6-4CC2-95B1-99039BEFEB4C" Id="CilProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\cil.properties" Name="cil.properties" Id="cil.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="C7D1310D-8C9C-492E-B51B-0B2859343237" Id="CmakeProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\cmake.properties" Name="cmake.properties" Id="cmake.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="2D29DB49-40BF-4948-95DC-6396AFF8143A" Id="CoffeeScriptProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\coffeescript.properties" Name="coffeescript.properties" Id="coffeescript.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="E7A4CBEF-6151-4B21-83E1-E147E71727D1" Id="CobolProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\cobol.properties" Name="cobol.properties" Id="cobol.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="34E4E054-E2B8-466E-BD28-34A0BB93FE0D" Id="ConfProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\conf.properties" Name="conf.properties" Id="conf.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="AC4E719B-13FB-4543-AE34-14E4652E247F" Id="CppProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\cpp.properties" Name="cpp.properties" Id="cpp.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="15E62CE3-11F7-4ECA-8AB0-E173967BD00D" Id="CsoundProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\csound.properties" Name="csound.properties" Id="csound.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="18E8E2E3-42CF-4CE2-AFB1-ED7E0FF37482" Id="CssProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\css.properties" Name="css.properties" Id="css.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="9BFA06D0-FE5F-4F0C-A581-3982885B736C" Id="DataflexProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\d.properties" Name="dataflex.properties" Id="dataflex.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="EEEA6AEA-8176-4EB5-BA65-035D558579EA" Id="DProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\d.properties" Name="d.properties" Id="d.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="04788350-2AFF-4F58-85DC-025E2F6D8244" Id="ECLProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\ecl.properties" Name="ecl.properties" Id="ecl.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="BCD5C664-4BE3-41FD-96C7-9A9B944A4ACC" Id="EiffelProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\eiffel.properties" Name="eiffel.properties" Id="eiffel.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="39024DDF-8F1E-4E78-97FA-A450E2A0D040" Id="ErlangProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\erlang.properties" Name="erlang.properties" Id="erlang.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="2CBEF873-D9CF-4857-A607-DAB47ED5CAD8" Id="EscriptProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\escript.properties" Name="escript.properties" Id="escript.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="B4A4C09D-AF04-4D83-9803-580F575AA6DC" Id="FlagshipProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\flagship.properties" Name="flagship.properties" Id="flagship.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="E950E51A-E8EC-4542-B7BF-9BB7A0F25F4F" Id="ForthProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\forth.properties" Name="forth.properties" Id="forth.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="C832FB33-D43E-459A-A054-43A207809A77" Id="FortranProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\fortran.properties" Name="fortran.properties" Id="fortran.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="EC69AC28-DA39-445E-B189-07BA8A5D3A6A" Id="FreebasicProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\freebasic.properties" Name="freebasic.properties" Id="freebasic.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="F04881D2-0B8F-42D4-89F4-B8F704BC75C7" Id="FSharpProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\fsharp.properties" Name="fsharp.properties" Id="fsharp.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="E0CC5789-7B99-4A50-A6FB-CB499CB1E2EB" Id="GapProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\gap.properties" Name="gap.properties" Id="gap.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="5B0B745E-30E7-4C10-96BA-5714C077DF68" Id="HaskellProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\haskell.properties" Name="haskell.properties" Id="haskell.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="5E49AF32-583D-4591-9E83-012D750E6A7D" Id="HexProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\hex.properties" Name="hex.properties" Id="hex.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="7BCC2EEC-5E50-453C-9BBD-20D5F6D3610F" Id="HollywoodProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\hollywood.properties" Name="hollywood.properties" Id="hollywood.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="6E62D814-6A3C-45B3-BD6E-B48C57116548" Id="HtmlProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\html.properties" Name="html.properties" Id="html.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="55D9FEB4-E2AA-4A90-9FDF-8D1210F3AF7C" Id="InnoProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\inno.properties" Name="inno.properties" Id="inno.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="6D8CDB6A-718A-42F9-A149-386921FCC300" Id="JsonProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\json.properties" Name="json.properties" Id="json.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="C4BE3DD3-F3F5-43FE-AB2B-FB3119963A51" Id="KixProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\kix.properties" Name="kix.properties" Id="kix.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="267EA6FD-3C4D-4896-992E-C21DE3FF4743" Id="LatexProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\latex.properties" Name="latex.properties" Id="latex.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="C591F8C9-7622-42C5-B07E-E9772C49F460" Id="LispProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\lisp.properties" Name="lisp.properties" Id="lisp.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="1F37ADCD-7FF0-40AC-AD79-E423C7D452B7" Id="LotProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\lot.properties" Name="lot.properties" Id="lot.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="682E82D7-E165-4AAF-B984-D4DA4A41A29D" Id="LoutProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\lout.properties" Name="lout.properties" Id="lout.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="3A9FD92A-E2F0-489E-AE6C-AA9A95768D0E" Id="LuaProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\lua.properties" Name="lua.properties" Id="lua.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="1991F082-407C-4FCC-8DB6-CE72E2011956" Id="MarkdownProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\markdown.properties" Name="markdown.properties" Id="markdown.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="072DBD03-94A6-454E-9A84-489A74E6F7F8" Id="MatlabProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\matlab.properties" Name="matlab.properties" Id="matlab.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="6593C864-2AC1-4014-B157-10B651E84605" Id="MaximaProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\maxima.properties" Name="maxima.properties" Id="maxima.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="E0BD4D26-1086-4DA9-B513-039969262645" Id="MetapostProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\metapost.properties" Name="metapost.properties" Id="metapost.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="B024F7DA-2D43-4DE3-B742-77A7A68B80B9" Id="MmixalProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\mmixal.properties" Name="mmixal.properties" Id="mmixal.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="9641B78E-C852-4E49-BEE6-63F18550CF20" Id="Modula3Properties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\modula3.properties" Name="modula3.properties" Id="modula3.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="65DDDA4B-C346-4276-B7A3-7433E4551E6C" Id="NimProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\nim.properties" Name="nim.properties" Id="nim.properties" KeyPath="yes" />
+					</Component>
+					<!-- Component Guid="DF88E277-A5E7-4FBE-A7E6-3091FFB8B391" Id="NimrodProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\nimrod.properties" Name="nimrod.properties" Id="nimrod.properties" KeyPath="yes" />
+					</Component -->
+					<Component Guid="5590E766-38CD-4C2B-BACA-3A1F8D900C38" Id="NncrontabProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\nncrontab.properties" Name="nncrontab.properties" Id="nncrontab.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="7A476B02-CE5B-4184-97B9-B99593DDBF0E" Id="NsisProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\nsis.properties" Name="nsis.properties" Id="nsis.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="A4982800-12C8-428A-A855-AFE25A4598F7" Id="OpalProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\opal.properties" Name="opal.properties" Id="opal.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="FA18918B-3F43-4006-A0DE-E69C8F4D6F6D" Id="oscriptProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\oscript.properties" Name="oscript.properties" Id="oscript.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="85C6DAC9-622E-4EE0-B057-D9B042F7EBC1" Id="OthersProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\others.properties" Name="others.properties" Id="others.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="CE09CB9A-61D2-4A2C-AF39-9B201EEB7980" Id="PaneAPI" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\PaneAPI.html" Name="PaneAPI.html" Id="PaneAPI.html" KeyPath="yes" />
+					</Component>
+					<Component Guid="87A3E87B-F2AC-4C55-8054-3BE895693DEF" Id="PascalProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\pascal.properties" Name="pascal.properties" Id="pascal.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="7E7B5B05-A357-4390-9F42-6A439DB354DB" Id="PerlProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\perl.properties" Name="perl.properties" Id="perl.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="E66C0E06-65F9-4528-B459-B4FE01E9A529" Id="PovProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\pov.properties" Name="pov.properties" Id="pov.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="CEA5415F-FF38-444C-85E1-BBDF5F8E5D68" Id="PowerProProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\powerpro.properties" Name="powerpro.properties" Id="powerpro.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="534B7A57-ADF2-411B-8D37-5F57BDCA4104" Id="PowershellProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\powershell.properties" Name="powershell.properties" Id="powershell.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="F8C508C4-5C51-42EF-BDE5-72763DB452D8" Id="PsProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\ps.properties" Name="ps.properties" Id="ps.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="60B4524A-9F07-4789-BAAF-2CA9AC887E31" Id="PurebasicProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\purebasic.properties" Name="purebasic.properties" Id="purebasic.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="39D9278A-BD76-497F-9C93-033214324672" Id="PythonProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\python.properties" Name="python.properties" Id="python.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="CD4C4BEC-3CFC-4AB5-8870-B0D1D081B47D" Id="RProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\r.properties" Name="r.properties" Id="r.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="C3329A46-F8DB-469E-9C8F-52E3E02711D8" Id="RakuProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\raku.properties" Name="raku.properties" Id="raku.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="759123EA-3043-4694-9D81-6B3FFC40A227" Id="RebolProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\rebol.properties" Name="rebol.properties" Id="rebol.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="8DD8A26B-C0D7-4230-95FD-3D11C54C1063" Id="RegistryProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\registry.properties" Name="registry.properties" Id="registry.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="CBFF6B96-01DD-423D-BCFA-4EEC6C9CDFB8" Id="RubyProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\ruby.properties" Name="ruby.properties" Id="ruby.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="B93AD999-89C7-43F4-A726-EB0B99E09A5F" Id="RustProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\rust.properties" Name="rust.properties" Id="rust.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="DDD166BE-451B-4519-BEC2-C07A0CC15710" Id="SasProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\sas.properties" Name="sas.properties" Id="sas.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="35B71983-1CFB-487B-AE07-714D8EAD8E8A" Id="SciTEDocHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEDoc.html" Name="SciTEDoc.html" Id="SciTEDoc.html" KeyPath="yes">
+							<Shortcut Name="SciTE Documentation" Id="scitedocsct" Description="SciTE Documentation" Directory="SciTEMenuFolder" Advertise="yes" Icon="man.ico">
+								<Icon Id="man.ico" SourceFile="..\..\Bitmaps\man.ico" />
+							</Shortcut>
+						</File>
+					</Component>
+					<Component Guid="F85A9E0E-3403-445F-ADC7-7F61B443F7C3" Id="SciTEHistoryHtml" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEHistory.html" Name="SciTEHistory.html" Id="SciTEHistory.html" KeyPath="yes">
+							<Shortcut Name="SciTE History" Id="scitehistsct" Description="SciTE History" Directory="SciTEMenuFolder" Advertise="yes">
+								<!-- Icon Id="man.ico" SourceFile="..\..\Bitmaps\man.ico" / -->
+							</Shortcut>
+						</File>
+					</Component>
+					<Component Guid="1B58C716-0020-477D-9CBE-036A97D6351D" Id="SciTELogoPng2" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTELogo.png" Name="SciTELogo.png" Id="SciTELogo2.png" KeyPath="yes" />
+					</Component>
+					<Component Guid="C9D8C66D-D7DF-4428-88D6-9989003A7568" Id="SciTELogo2xPng2" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTELogo2x.png" Name="SciTELogo2x.png" Id="SciTELogo2x2.png" KeyPath="yes" />
+					</Component>
+					<Component Guid="5C902399-7AD6-4343-A56E-E0128F0984AE" Id="SciTEIcoPng2" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEIco.png" Name="SciTEIco.png" Id="SciTEIco2.png" KeyPath="yes" />
+					</Component>
+					<Component Guid="CC3D4645-15B4-43F5-B112-8F4711AD6928" Id="SciTEProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTE.properties" Name="SciTE.properties" Id="SciTE.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="ACBF8766-562F-4B5D-8FE0-9BA45C95614E" Id="SciTEGlobalProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\SciTEGlobal.properties" Name="SciTEGlobal.properties" Id="SciTEGlobal.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="647D7AF7-F0FD-440E-8057-797584208CCE" Id="ScriptolProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\scriptol.properties" Name="scriptol.properties" Id="scriptol.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="F2DD5036-0EE7-41EE-9602-DFC3DC297501" Id="SmalltalkProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\smalltalk.properties" Name="smalltalk.properties" Id="smalltalk.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="9C833F5B-FC70-4D8F-ABB0-9908FD63F884" Id="SorcinsProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\sorcins.properties" Name="sorcins.properties" Id="sorcins.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="4FF427B2-3B01-4A70-A5C3-B531112BA496" Id="SpecmanProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\specman.properties" Name="specman.properties" Id="specman.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="2B785031-8812-4DAD-B56F-0DE9294D414E" Id="SpiceProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\spice.properties" Name="spice.properties" Id="spice.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="A94B5044-EB49-4BE0-86D1-A36268E00309" Id="SqlProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\sql.properties" Name="sql.properties" Id="sql.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="26ED14C5-0E64-4EBC-9903-B3602A113B03" Id="TaclProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\tacl.properties" Name="tacl.properties" Id="tacl.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="340CEE07-4710-466E-B08F-82B6BE712878" Id="TalProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\tal.properties" Name="tal.properties" Id="tal.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="61808CCC-5DE0-42A2-988B-5750B1C01A55" Id="TclProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\tcl.properties" Name="tcl.properties" Id="tcl.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="A0DDFCF0-1E4E-4E97-9065-7D74623CB77F" Id="TexProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\tex.properties" Name="tex.properties" Id="tex.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="672B9745-FDC3-41C4-A735-6FF0DE833D03" Id="Txt2tagsProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\txt2tags.properties" Name="txt2tags.properties" Id="txt2tags.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="1731F309-3FEA-4A97-92CD-CA1C8785EDFE" Id="VbProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\vb.properties" Name="vb.properties" Id="vb.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="166530D3-4A00-4773-AE8F-8F0B76AA9CF0" Id="VerilogProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\verilog.properties" Name="verilog.properties" Id="verilog.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="10B1314A-C8C8-43EB-B867-0E08D5972C9F" Id="VhdlProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\vhdl.properties" Name="vhdl.properties" Id="vhdl.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="2E75372E-446D-49E8-886D-617CF5D145B9" Id="VisualPrologProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\visualprolog.properties" Name="visualprolog.properties" Id="visualprolog.properties" KeyPath="yes" />
+					</Component>
+					<Component Guid="11FE176D-8E2F-48ED-B659-3A021D6E6F4A" Id="YamlProperties" Shared="no" Permanent="no" DiskId="1" Win64="$(var.winx64)">
+						<File Source="..\..\wscite\yaml.properties" Name="yaml.properties" Id="yaml.properties" KeyPath="yes" />
+					</Component>
+				</Directory>
+			</Directory>
+			<Directory Id="ProgramMenuFolder" Name="PMFolder">
+				<Directory Id="SciTEMenuFolder" Name="Scintilla Text Editor">
+					<Component Id="IDSciTEProgGroup" Guid="9CC49159-CC14-40F7-9296-B6CFFB20325C" Win64="$(var.winx64)">
+						<Shortcut Id="UninstallSciTE" Name="Uninstall SciTE" Target="[SystemFolder]msiexec.exe" Arguments="/x [ProductCode]" Description="Uninstall SciTE" />
+						<RemoveFolder Id="IDSciTEProgGroup" On="uninstall" />
+						<!-- component installs to user profile so it must use a registry key as its keypath -->
+						<RegistryKey Id="Product" Root="HKMU" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\SciTE.exe" Action="createAndRemoveOnUninstall">
+							<RegistryValue Id="ProductNoPath" Type="string" Value="[APPLICATIONFOLDER]\SciTE.exe" KeyPath="no" />
+							<RegistryValue Id="ProductPath" Name="Path" Type="string" Value="[APPLICATIONFOLDER]\SciTE.exe" KeyPath="no" />
+						</RegistryKey>
+					</Component>
+				</Directory>
+			</Directory>
+			<Directory Id="DesktopFolder" Name="Desktop">
+				<Component Id="ApplicationShortcutDesktop" Guid="4D6ECB34-5F8D-4EDD-9F69-CA329A8D1DD0" Win64="$(var.winx64)">
+					<Shortcut Id="ApplicationDesktopShortcut" Icon="SciBall2.ico" Name="SciTE" Description="SciTE Text Editor" Target="[APPLICATIONFOLDER]SciTE.exe">
+						<Icon Id="SciBall2.ico" SourceFile="..\..\Bitmaps\SciBall.ico" />
+					</Shortcut>
+					<!-- component installs to user profile so it must use a registry key as its keypath -->
+					<RegistryKey Id="ProductDesktopShortcut" Root="HKMU" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\SciTE.exe" Action="createAndRemoveOnUninstall">
+						<RegistryValue Id="ProductDesktopShortcutNoPath" Type="string" Value="[APPLICATIONFOLDER]\SciTE.exe" KeyPath="no" />
+						<RegistryValue Id="ProductDesktopShortcutPath" Name="Path" Type="string" Value="[APPLICATIONFOLDER]\SciTE.exe" KeyPath="no" />
+					</RegistryKey>
+				</Component>
+			</Directory>
+		</DirectoryRef>
+	</Fragment>
+</Wix>

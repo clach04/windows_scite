@@ -1,0 +1,6 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	  <PropertyGroup>
+		<sciteversion>5.4.1</sciteversion>
+	  </PropertyGroup>
+	</Project>
+	

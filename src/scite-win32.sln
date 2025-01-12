@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+# SharpDevelop 5.2
+Project("{CFEE4113-1246-4D54-95CB-156813CB8593}") = "scitewin32", "scite-win32\scitewin32.wixproj", "{65A7DD7B-DF76-4225-91A3-6E9E42E0029A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiXSCiTEInstallExtension", "WiXSCiTEInstallExtension\WiXSCiTEInstallExtension.csproj", "{19178A26-1F15-439F-969A-8591CFE492A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sciteversion", "sciteversion\sciteversion.csproj", "{7B46E77B-6B0E-48B2-B764-8540523EA10E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|x86 = Release|x86
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{65A7DD7B-DF76-4225-91A3-6E9E42E0029A}.Release|x86.ActiveCfg = Release|x86
+		{65A7DD7B-DF76-4225-91A3-6E9E42E0029A}.Release|x86.Build.0 = Release|x86
+		{65A7DD7B-DF76-4225-91A3-6E9E42E0029A}.Release|x64.ActiveCfg = Release|x64
+		{65A7DD7B-DF76-4225-91A3-6E9E42E0029A}.Release|x64.Build.0 = Release|x64
+		{19178A26-1F15-439F-969A-8591CFE492A1}.Release|x86.ActiveCfg = Release|x86
+		{19178A26-1F15-439F-969A-8591CFE492A1}.Release|x86.Build.0 = Release|x86
+		{19178A26-1F15-439F-969A-8591CFE492A1}.Release|x64.ActiveCfg = Release|x64
+		{19178A26-1F15-439F-969A-8591CFE492A1}.Release|x64.Build.0 = Release|x64
+		{7B46E77B-6B0E-48B2-B764-8540523EA10E}.Release|x86.ActiveCfg = Release|x86
+		{7B46E77B-6B0E-48B2-B764-8540523EA10E}.Release|x86.Build.0 = Release|x86
+		{7B46E77B-6B0E-48B2-B764-8540523EA10E}.Release|x64.ActiveCfg = Release|x64
+		{7B46E77B-6B0E-48B2-B764-8540523EA10E}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+EndGlobal

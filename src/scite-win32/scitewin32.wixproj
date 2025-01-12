@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <Import Project="Setup.Version.proj" />
+  <PropertyGroup>
+    <ProjectGuid>{65A7DD7B-DF76-4225-91A3-6E9E42E0029A}</ProjectGuid>
+    <ProjectTypeGuids>{CFEE4113-1246-4D54-95CB-156813CB8593}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <OutputName>$(Platform)\scite-$(sciteversion)$(Platform)</OutputName>
+    <OutputType>Package</OutputType>
+    <RootNamespace>scite_win32</RootNamespace>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <SupressIces>ICE45</SupressIces>
+    <WixVariables>WixUILicenseRtf=license.rtf</WixVariables>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SuppressIces>ICE57;ICE80</SuppressIces>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x64' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Files.wxs" />
+    <Compile Include="Setup.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BuildConfig.wxs" />
+    <None Include="license.rtf" />
+    <None Include="Setup.Version.Proj" />
+    <None Include="WiXDialog\WixUI_en-us-scite.wxl" />
+    <None Include="WiXDialog\WixUI_SCiTEAdvanced.wxs" />
+    <None Include="WiXDialog\build.bat" />
+    <None Include="license.rtf" />
+    <None Include="Bitmaps\dlgbmp.bmp" />
+    <None Include="Bitmaps\wiz-55x55x24.bmp" />
+    <EmbeddedResource Include="WixDialog\WixUI_en-us-scite.wxl">
+      <Link>WixUI_en-us-subversion.wxl</Link>
+    </EmbeddedResource>
+    <Folder Include="WiXDialog" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUIExtension.dll" />
+    <WixExtension Include="ebswift">
+      <HintPath>..\WiXSCiTEInstallExtension\bin\Release\WiXSCiTEInstallExtension.dll</HintPath>
+      <Name>ebswift</Name>
+    </WixExtension>
+    <WixExtension Include="WixUtilExtension.dll" />
+    <WixLibrary Include="WiXDialog\WixUI_SCiTEAdvanced.wixlib" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+  <PropertyGroup>
+    <PreBuildEvent>..\..\WiXDialog\build.bat</PreBuildEvent>
+  </PropertyGroup>
+</Project>

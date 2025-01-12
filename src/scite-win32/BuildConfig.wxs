@@ -1,0 +1,50 @@
+﻿<!--
+	Author: Troy Simpson (ebswift@gmail.com) https://www.ebswift.com
+
+	Pre-requisites - MSBuild
+	Install the WiX Toolset for Windows
+	
+	If there is an error building where wix cannot be found, check the wix reference in WiXSCiTEInstallExtension that it is pointing to the installed WiX location.
+ 
+	Instructions for upgrades:
+
+	1.  Get new binaries from here (binaries only):
+	    http://scintilla.sourceforge.net/SciTEDownload.html
+	2.  Perform a manual merge on the x64 download of SciteGlobal.properties and html.properties to retain custom changes
+		(hint, use kdiff3 (https://download.kde.org/stable/kdiff3/?C=M;O=D), save the modified wscite first from the build folder, then the newly downloaded, 
+		unmodified wscite in windows explorer shell to compare to the newly downloaded wscite - double-check output file in kdiff3 merge) - save with unix line endings
+	3.  Repeat the merge for the x86 download (merge must be performed to both x86 and x64 downloaded versions)
+	4.  Check for any new files that need to be added to Files.wxs (e.g. new .properties files that show up black on the merge)
+	5.  For the 32bit build, rename SciTE32.exe to SciTE.exe for simplicity's sake in the build configuration
+	6.  Set the platform to x64 in Build->Set Platform and copy the x64 merged files across to the build folder
+	7.  Check for new version of Tidy here (run a command prompt and run tidy - -help to see the current version number):
+	    Last setup version was 5.6.0
+	    https://github.com/htacg/tidy-html5/releases
+		For the moment, tidy does not appear to provide win32 releases anymore, so we will remain on 5.6.0 for now.
+	8.  Clean before *every* build.  Clean the solution, then build sciteversion, then build WiXSCiTEInstallExtension, then rebuild scitewin32.  There
+		is a strange glitch in the build process where the version isn't picked up properly, so after doing the previous steps, rebuild
+		the scitewin32 project *again*
+	9.  Copy the x86 version downloaded and merged files across to the build folder and repeat step 6, this time setting to the x86 platform
+	10. Get the release history from here for publishing: https://www.scintilla.org/ScintillaHistory.html
+	11. Generate the SHA1 checksum for uploading:
+		certutil -hashfile scite-x.x.xx86.msi >scite-x.x.xx86-sha1sum.txt
+		certutil -hashfile scite-x.x.xx64.msi >scite-x.x.xx64-sha1sum.txt
+
+References
+
+Microsoft recommends VC++ redistributables not be installed via merge modules and instead installing a redistributable package:
+
+https://msdn.microsoft.com/en-us/library/ms235290.aspx
+
+Registering Shell Extension Handlers
+
+https://msdn.microsoft.com/en-us/library/windows/desktop/cc144110(v=vs.85).aspx
+
+
+-->
+
+<Include>
+	<?define MAINEXE="..\..\wscite\SciTE.exe"?>
+	<?define ProductVersion=!(bind.fileVersion.SciTE.exe)?>
+	<?define ProductCode="*" ?>
+</Include>

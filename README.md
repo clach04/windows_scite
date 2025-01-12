@@ -1,5 +1,5 @@
 
-This is a SNAPSHOT of scite-5.4.1 with Microsoft Windows installer and Context Menu for Windows Explorer.
+This is a SNAPSHOT of scite-5.4.1 (circa Dec 26 2023) with Microsoft Windows installer and Context Menu for Windows Explorer.
 
   * [SciTE](https://scintilla.org/SciTE.html), or SCIntilla based Text Editor, is a cross-platform text editor created by Neil Hodgson.
   * This project was created by Troy Simpson

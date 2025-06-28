@@ -11,13 +11,13 @@ This is a SNAPSHOT of scite-5.4.1 (circa Dec 26 2023) with Microsoft Windows ins
   * Installer
       * Bruce Dodson https://gisdeveloper.tripod.com/scite.html - for install
         differences to upstream:
-              * bitlib lua lib
-              * bunch of whitespace/indentation lua code functions
-              * external binaries asytle/tidy/somethingelse and menu items
-              * API help
-              * bunch of config changes
-                  * nice status line(s)
-                  * default file *.txt?
+          * bitlib lua lib
+          * bunch of whitespace/indentation lua code functions
+          * external binaries asytle/tidy/somethingelse and menu items
+          * API help
+          * bunch of config changes
+              * nice status line(s)
+              * default file *.txt?
       * This project was created by Troy Simpson
           * shchange by Troy Simpson, sends a shell change notification so that after an install the wscitecm context menu will show up
           * wscitecm in this project is modified to have 2 menu entries
